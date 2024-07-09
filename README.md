@@ -10,10 +10,9 @@ To start using these scripts, you need to clone this repository, got to director
 
 We can use the following script to prepare the Odoo codebase for local development server:
 
-!!! note
     Prepare Odoo 16.0 for local development
 
-    ```bash
+    ```
     $ cd cstation
     $ cstation odoo local 16.0
     ```
@@ -25,10 +24,9 @@ We can use the following script to prepare the Odoo codebase for local developme
 
 We can use the following script to prepare the Odoo codebase for production server:
 
-!!! note
     Prepare Odoo 16.0 for production server
 
-    ```bash
+    ```
     $ cd cstation
     $ cstation odoo server 16.0
     ```
