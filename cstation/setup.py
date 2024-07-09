@@ -7,6 +7,7 @@ setup(
     install_requires=[
         'Click',
         'auto_click_auto',
+        'ansible',
     ],
     entry_points={
         'console_scripts': [
