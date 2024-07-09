@@ -1,0 +1,13 @@
+setup.py
+commands/container.py
+commands/flowise.py
+commands/github.py
+commands/perfectwork.py
+commands/perfectwork6.py
+commands/streamlit.py
+cs.egg-info/PKG-INFO
+cs.egg-info/SOURCES.txt
+cs.egg-info/dependency_links.txt
+cs.egg-info/entry_points.txt
+cs.egg-info/requires.txt
+cs.egg-info/top_level.txt

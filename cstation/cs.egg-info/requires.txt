@@ -1,0 +1,2 @@
+Click
+auto_click_auto
