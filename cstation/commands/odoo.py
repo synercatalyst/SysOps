@@ -60,7 +60,7 @@ def server(ctx, host, version, ssh_port, only_addons):
             f"Deploy PerfectWORK Addons Modules {version} To -> {host} using Port {ssh_port}"
         )
         os.system(
-            f'rsync -avzhe "ssh -p{ssh_port}" --copy-links --delete --exclude  ".*" --exclude "__pycache__"  /opt/PW/PW_ADDONS.{version}/ root@{host}.synercatalyst.com:/var/lib/perfectwork/PW_ADDONS.{version}'
+            f'rsync -avzhe "ssh -p{ssh_port}" --copy-links --delete --exclude  ".*" --exclude "__pycache__"  /opt/PW/Addons.{version}/ root@{host}.synercatalyst.com:/var/lib/odoo/Addons.{version}'
         )
     else:
         # No Need to prepare directory for sending the files to Remote Host
@@ -125,20 +125,27 @@ def local(ctx, version, only_addons):
         17.0   : Version 17.0
 
     """
-    if only_addons:
-        click.echo(
-            f"Build Odoo Addons Modules {version} To -> Local Host"
-        )
-        os.system(
-        f"gitoo install-all --conf_file /opt/PW/Addons.{version}/odoo_addons_config.yaml --destination /opt/PW/Addons.{version}"
-    )
-    else:
+    if not only_addons:
         click.echo(f"Preparing PerfectWORK Version {version} for Local Development")
         os.chdir("/opt/PW/odoo")
         os.system(f"git switch {version}")
         os.system(
             f"rsync -avzhe --delete --exclude '.*' --exclude '__pycache__' --exclude 'odoo.conf' /opt/PW/odoo/* /opt/PW/Odoo.{version}"
         )
-        os.system(
-            f"gitoo install-all --conf_file /opt/PW/Addons.{version}/odoo_addons_config.yaml --destination /opt/PW/Addons.{version}"
-        )
+
+    # Open the file in read mode
+    with open(f'/opt/PW/Addons.{version}/odoo_addons_github.yaml', 'r') as file:
+        lines = file.readlines()
+
+    # # Print the lines
+    for line in lines:
+        parts = line.split("/",1)
+        app_name = parts[1].split(".")[0]
+        os.system(f'rm -rf /opt/PW/Addons.{version}/{app_name}')
+        print(f'git clone {line.strip()} --single-branch --branch {version} - {app_name}')
+        os.system(f'git clone {line.strip()} --single-branch --branch {version} /opt/PW/Addons.{version}/{app_name} ')
+    
+    # Download modules from OCA Repositories
+    os.system(
+        f"gitoo install-all --conf_file /opt/PW/Addons.{version}/odoo_addons_oca.yaml --destination /opt/PW/Addons.{version}"
+    )
