@@ -130,5 +130,5 @@ def local(ctx, version, with_addons):
     os.chdir("/opt/PW/odoo")
     os.system(f"git switch {version}")
     os.system(
-        f"rsync -avzhe --delete --exclude '.*' --exclude '__pycache__' /opt/PW/odoo/* /opt/PW/Odoo.{version}"
+        f"rsync -avzhe --delete --exclude '.*' --exclude '__pycache__' --exclude 'odoo.conf' /opt/PW/odoo/* /opt/PW/Odoo.{version}"
     )
