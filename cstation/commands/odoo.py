@@ -16,7 +16,7 @@ def odoo(ctx):
 
 
 @odoo.command(
-    "server", short_help="Configure Odoo version => 16.0 for Remote Server"
+    "server", short_help="Configure Odoo version => 16.0 for Remote Server",  no_args_is_help=True
 )
 @click.argument("host", metavar="<host>", type=click.STRING)
 @click.argument("version", metavar="<version>", type=click.STRING)
@@ -68,19 +68,19 @@ def server(ctx, host, version, ssh_port, only_addons):
             f"Preparing PerfectWORK Core Modules {version} To -> {host} using Port {ssh_port}"
         )
         os.system(
-            f"rm -rf ./PW.{version}"
+            f"rm -rf ./Odoo.{version}"
         )
         os.system(
-            f"rsync -avzhe --delete --exclude  '.*' /opt/PW/PW.{version}/  ./PW.{version}"
+            f"rsync -avzhe --delete --exclude  '.*' /opt/PW/Odoo.{version}/  ./Odoo.{version}"
         )
         os.system(
-            f"mv ./PW.{version}/odoo/addons/* ./PW.{version}/addons/"
+            f"mv ./Odoo.{version}/odoo/addons/* ./Odoo.{version}/addons/"
         )
         os.system(
-            f"rm -rf ./PW.{version}/odoo/addons"
+            f"rm -rf ./Odoo.{version}/odoo/addons"
         )
         os.system(
-            f"mv ./PW.{version}/addons ./PW.{version}/odoo/"
+            f"mv ./Odoo.{version}/addons ./Odoo.{version}/odoo/"
         )
         os.system(
             "find ./ -name __pycache__ -type d -exec rm -rf {} + "
@@ -89,10 +89,10 @@ def server(ctx, host, version, ssh_port, only_addons):
             f"Deploy PerfectWORK Version {version} To -> {host} using Port {ssh_port}"
         )
         os.system(
-            f"rsync -avzhe 'ssh -p{ssh_port}'  --delete --exclude  '.*'  ./PW.{version}/odoo/ root@{host}.synercatalyst.com:/var/lib/perfectwork/PW.{version}"
+            f"rsync -avzhe 'ssh -p{ssh_port}'  --delete --exclude  '.*'  ./Odoo.{version}/odoo/ root@{host}.synercatalyst.com:/var/lib/odoo/Odoo.{version}"
         )
         os.system(
-            f"rm -rf ./PW.{version}"
+            f"rm -rf ./Odoo.{version}"
         )
         click.echo(
             f"Deploy PerfectWORK Addons Modules {version} To -> {host} using Port {ssh_port}"
@@ -106,15 +106,15 @@ def server(ctx, host, version, ssh_port, only_addons):
 )
 @click.argument("version", metavar="<version>", type=click.STRING)
 @click.option(
-    "-a",
-    "--with_addons",
+    "-oa",
+    "--only_addons",
     default=False,
     is_flag=True,
     show_default=True,
-    help="Inclusive Addons Modules [ADDONS]",
+    help="Prepare Addons Modules Only for [ADDONS.X.0]",
 )
 @click.pass_context
-def local(ctx, version, with_addons):
+def local(ctx, version, only_addons):
     """
     Setting Odoo for Localhost Operations
 
@@ -125,10 +125,20 @@ def local(ctx, version, with_addons):
         17.0   : Version 17.0
 
     """
-
-    click.echo(f"Preparing PerfectWORK Version {version} for Local Development")
-    os.chdir("/opt/PW/odoo")
-    os.system(f"git switch {version}")
-    os.system(
-        f"rsync -avzhe --delete --exclude '.*' --exclude '__pycache__' --exclude 'odoo.conf' /opt/PW/odoo/* /opt/PW/Odoo.{version}"
+    if only_addons:
+        click.echo(
+            f"Build Odoo Addons Modules {version} To -> Local Host"
+        )
+        os.system(
+        f"gitoo install-all --conf_file /opt/PW/Addons.{version}/odoo_addons_config.yaml --destination /opt/PW/Addons.{version}"
     )
+    else:
+        click.echo(f"Preparing PerfectWORK Version {version} for Local Development")
+        os.chdir("/opt/PW/odoo")
+        os.system(f"git switch {version}")
+        os.system(
+            f"rsync -avzhe --delete --exclude '.*' --exclude '__pycache__' --exclude 'odoo.conf' /opt/PW/odoo/* /opt/PW/Odoo.{version}"
+        )
+        os.system(
+            f"gitoo install-all --conf_file /opt/PW/Addons.{version}/odoo_addons_config.yaml --destination /opt/PW/Addons.{version}"
+        )

@@ -8,6 +8,7 @@ setup(
         'Click',
         'auto_click_auto',
         'ansible',
+        'gitoo'
     ],
     entry_points={
         'console_scripts': [
