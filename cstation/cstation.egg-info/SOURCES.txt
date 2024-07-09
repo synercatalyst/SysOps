@@ -2,6 +2,7 @@ setup.py
 commands/container.py
 commands/flowise.py
 commands/github.py
+commands/odoo.py
 commands/perfectwork.py
 commands/perfectwork6.py
 commands/streamlit.py

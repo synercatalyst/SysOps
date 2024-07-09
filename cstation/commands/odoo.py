@@ -102,7 +102,7 @@ def server(ctx, host, version, ssh_port, only_addons):
         )
 
 @odoo.command(
-    "local", short_help="Configure Odoo for Local Host Development Operations"
+    "local", short_help="Configure Odoo for Local Host Development Operations", no_args_is_help=True
 )
 @click.argument("version", metavar="<version>", type=click.STRING)
 @click.option(
