@@ -3,8 +3,20 @@
 To start using these scripts, you need to clone this repository, got to directory cstation and run the `pip install -e .` script.
 
 
-## Prepare Odoo Codebase
+[//]: # (addons)
 
+Commands Structure for ControlStation (cstation)
+----------------
+| Commands | Arguments | Options | Summary |
+| -------- | --------- | --------| --------|
+| odoo     |  local |  --version _XX_ | Build Odoo._version_ folder in local development server <br><br> Need to have addons to build with <br><br> _XX_ {Odoo version} : 16.0, 17.0  |
+
+
+
+[//]: # (end addons)
+
+
+## Prepare Odoo Codebase
 
 ### For Local Development Server
 
